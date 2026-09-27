@@ -49,8 +49,25 @@ class ProxyAPIClientTests(unittest.TestCase):
             reasoning_effort="high",
         )
         self.assertEqual(captured["body"]["reasoning_effort"], "high")
+        self.assertEqual(captured["body"]["max_tokens"], 123)
         self.assertEqual(captured["body"]["messages"][0]["content"], "hi")
         self.assertEqual(captured["timeout"], 15)
+
+    def test_gpt6_uses_max_completion_tokens(self):
+        captured = {}
+
+        def transport(request, timeout):
+            captured["body"] = json.loads(request.data.decode("utf-8"))
+            return {
+                "model": "openai/gpt-6-luna",
+                "choices": [{"message": {"content": "ok"}, "finish_reason": "stop"}],
+                "usage": {},
+            }
+
+        client = ProxyAPIClient("secret", "https://example.test/v1", 15, transport)
+        client.chat("openai/gpt-6-luna", [{"role": "user", "content": "hi"}], 321)
+        self.assertEqual(captured["body"]["max_completion_tokens"], 321)
+        self.assertNotIn("max_tokens", captured["body"])
 
     def test_timeout_becomes_safe_error(self):
         def transport(request, timeout):
@@ -78,4 +95,3 @@ class ProxyAPIClientTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

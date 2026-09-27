@@ -106,8 +106,11 @@ class ProxyAPIClient:
         body: Dict[str, Any] = {
             "model": model,
             "messages": messages,
-            "max_tokens": max_tokens,
         }
+        if model.startswith("openai/gpt-6") or model.startswith("gpt-6"):
+            body["max_completion_tokens"] = max_tokens
+        else:
+            body["max_tokens"] = max_tokens
         if reasoning_effort:
             body["reasoning_effort"] = reasoning_effort
 

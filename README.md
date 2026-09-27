@@ -55,6 +55,16 @@ python3 -m unittest discover -s tests -v
 
 Тесты не делают платных запросов: HTTP-транспорт подменяется фиктивным.
 
+### Проверено
+
+27 сентября 2026 года:
+
+- `13` модульных тестов — `OK`;
+- живой ответ `openai/gpt-6-luna` — получен;
+- живой ответ `anthropic/claude-opus-5-5` с `reasoning_effort=high` — получен;
+- история из предыдущего запуска загружается и учитывается моделью;
+- файл с ключом и файл истории игнорируются Git.
+
 ## Безопасность
 
 - `.env` и `history.json` добавлены в `.gitignore`.
@@ -67,4 +77,3 @@ python3 -m unittest discover -s tests -v
 - [ProxyAPI: модели и их идентификаторы](https://proxyapi.ru/docs/models)
 - [ProxyAPI: reasoning](https://proxyapi.ru/docs/reasoning)
 - [OpenAI: GPT-6 Luna](https://developers.openai.com/api/docs/models/gpt-6-luna)
-
